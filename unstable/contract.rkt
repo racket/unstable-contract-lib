@@ -71,8 +71,14 @@
 ;; Added by ntoronto
 
 (define (treeof elem-contract)
-  (or/c elem-contract
-        (listof (recursive-contract (treeof elem-contract) #:flat))))
+  (define tree-contract
+    (or/c elem-contract
+          (listof
+            (cond
+              [(flat-contract? elem-contract) (recursive-contract tree-contract #:flat)]
+              [(chaperone-contract? elem-contract) (recursive-contract tree-contract #:chaperone)]
+              [else (recursive-contract tree-contract)]))))
+  tree-contract)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;

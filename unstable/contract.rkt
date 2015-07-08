@@ -63,11 +63,14 @@
   (let ([ctc (coerce-contract 'rename-contract ctc)])
     (if (flat-contract? ctc)
         (flat-named-contract name (flat-contract-predicate ctc))
-        (let* ([ctc-fo (contract-first-order ctc)]
-               [proj (contract-projection ctc)])
+        (let* ([make-contract (if (chaperone-contract? ctc) make-chaperone-contract make-contract)])
+          (define (stronger? this other)
+            (contract-stronger? ctc other))
           (make-contract #:name name
-                           #:projection proj
-                           #:first-order ctc-fo)))))
+                         #:projection (contract-projection ctc)
+                         #:first-order (contract-first-order ctc)
+                         #:stronger stronger?
+                         #:list-contract? (list-contract? ctc))))))
 
 ;; Added by asumu
 ;; option/c : contract -> contract

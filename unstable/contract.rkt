@@ -1,16 +1,14 @@
 #lang racket/base
 (require racket/contract/base
          racket/contract/combinator
-         racket/sequence)
+         (only-in racket/sequence sequence/c)
+         (only-in racket/string non-empty-string?))
 
 (define path-piece?
   (or/c path-string? (symbols 'up 'same)))
 
 (define port-number? (between/c 1 65535))
 (define tcp-listen-port? (between/c 0 65535))
-
-(define (non-empty-string? x)
-  (and (string? x) (not (zero? (string-length x)))))
 
 ;; ryanc added:
 
@@ -149,8 +147,6 @@
  [port-number? contract?]
  [tcp-listen-port? contract?]
 
- [non-empty-string? predicate/c]
-
  [if/c (-> procedure? contract? contract? contract?)]
  [failure-result/c contract?]
  [rename-contract (-> contract? any/c contract?)]
@@ -159,4 +155,5 @@
  [truth/c flat-contract?]
  
  [treeof (contract? . -> . contract?)])
-(provide sequence/c)
+(provide sequence/c
+         non-empty-string?)

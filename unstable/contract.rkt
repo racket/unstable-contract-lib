@@ -2,13 +2,11 @@
 (require racket/contract/base
          racket/contract/combinator
          (only-in racket/sequence sequence/c)
-         (only-in racket/string non-empty-string?))
+         (only-in racket/string non-empty-string?)
+         (only-in racket/tcp port-number? listen-port-number?))
 
 (define path-piece?
   (or/c path-string? (symbols 'up 'same)))
-
-(define port-number? (between/c 1 65535))
-(define tcp-listen-port? (between/c 0 65535))
 
 ;; ryanc added:
 
@@ -144,8 +142,6 @@
 
 (provide/contract
  [path-piece? contract?]
- [port-number? contract?]
- [tcp-listen-port? contract?]
 
  [if/c (-> procedure? contract? contract? contract?)]
  [failure-result/c contract?]
@@ -156,4 +152,6 @@
  
  [treeof (contract? . -> . contract?)])
 (provide sequence/c
-         non-empty-string?)
+         non-empty-string?
+         port-number?
+         (rename-out [listen-port-number? tcp-listen-port?]))
